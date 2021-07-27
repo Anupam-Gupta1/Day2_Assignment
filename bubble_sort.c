@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
+#include <sys/time.h>
 
 /*
 * Function to generate Input
@@ -23,12 +23,14 @@ void input_value(int arr[],int n,int type){
     
     if(type == 1) {
         
-        // random -> rand()
+        //Random Values
         for(int i = 0; i < n; i++){
             arr[i] = rand() % n + 1;
         }
         
     }
+
+    //Ascending Values
     else if(type == 2) {
         
         for(int i = 0; i < n; i++){
@@ -36,6 +38,8 @@ void input_value(int arr[],int n,int type){
         }
         
     }
+
+    //Descending Values
     else if(type == 3) {
         
         for(int i = 0; i < n; i++){
@@ -65,18 +69,18 @@ void swap(int arr[],int i,int j){
 
 void bubble_sort(int arr[],int n){
     
-    bool check = false;
+    int check = 0;
     
     for(int i = 0; i < n-1; i++){
         
-        check = false;
+        check = 0;
         
         for(int j = 0; j <= n-i-1; j++){
             
             // checking adjacent elements
             if(arr[j] > arr[j+1]){
                 swap(arr,j,j+1);
-                check = true;
+                check = 1;
             }
             
         }
@@ -88,54 +92,34 @@ void bubble_sort(int arr[],int n){
     
 }
 
-/*
-* Function to calculate_time for different type of input
-* intial_size -> 8000
-* increment -> 4000
-*/
-
-void calculate_time(int intial_size,int increment,int type){
-    struct timeval e;
-    int i;
-    
-    for(i=0;i<8;i++){
-        
-        int size = intial_size + increment*i;
-        int arr[size];
-        
-        // Calling Function for generating Input
-        input_value(arr,size,type);
-        
-        gettimeofday(&e, NULL);
-        
-        // sec*1000 + microseconds/1000 == milliseconds 
-        long long start_time = e.tv_sec * 1000LL + e.tv_usec / 1000;
-        
-        // Calling bubble_sort to sort array
-        bubble_sort(arr,size);
-        
-        gettimeofday(&e, NULL);
-        
-        long long end_time = e.tv_sec * 1000LL + e.tv_usec / 1000;
-        
-        printf("\t %lld",end_time - start_time);
-    }
-    
-}
-
 int main()
 {
-    int intial_size = 8000;
-    int increment = 4000;
+    int n;
     int type;
+    scanf("%d", &n);
     scanf("%d", &type);
-    
-    printf("Time Taken");
-    
+    int arr[n];
+
+
     // type 1-> Random Numbers
     // type 2-> Sorted Numbers in Ascending Order 
     // type 3-> Sorted Numbers in Descending Order 
-    calculate_time(intial_size,increment,type);
+    input_value(arr,n,type);                                                       //Calling Function for generating Input
+
+
+    struct timeval e;
+    gettimeofday(&e, NULL);
+    long long start_time = e.tv_sec * 1000LL + e.tv_usec / 1000;
+    
+    bubble_sort(arr,n);                                                            // Calling bubble_sort to sort array
+
+    gettimeofday(&e, NULL);
+    long long end_time = e.tv_sec * 1000LL + e.tv_usec / 1000;
+    
+    printf("Time Taken");
+    
+    printf("\t %lld",end_time - start_time);
+    printf("\n");
     
     return 0;
 }
